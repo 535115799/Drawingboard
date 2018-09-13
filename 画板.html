@@ -1,0 +1,114 @@
+<!doctype html><!--声明文档类型为html-->
+<html><!--根标签 超文本标记语言-->
+<head><!--头部 不可视化标签-->
+    <meta charset="UTF-8"><!--utf-8 :国际编码-->
+    <!--网页三要素-->
+    <title>28号-HAHA</title>
+    <meta name="Keywords" content="认真上课"><!--关键词-->
+    <meta name="Description" content="描述">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <base target='_blank' />
+    <style type="text/css">
+        body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,code,form,fieldset,legend,input,p,th,td{margin:0; padding:0;}
+        img{border:0;vertical-align:middle;}
+        li{list-style:none;}
+        a:active, a:focus { outline:none;}
+        a{text-decoration:none; color:#000;}
+        .clearfix:after{ content:''; display:inline-block;clear:both;}
+        .fl{ float:left;}
+        .fr{ float:right;}
+        #wrap{
+            width: 800px;
+            margin: 50px auto 0;
+            padding: 40px;
+            border: 1px solid #000;
+            text-align:center;
+        }
+        #wrap div input{
+            width: 80px;
+            margin-left: 5px;
+        }
+        #wrap .draw{
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 500px;
+            margin-top: 50px;
+            background-color: #ccc;
+        }
+        .draw div{
+            position: absolute;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body> <!--身体:网页的内容.可视化标签-->
+    <div id="wrap">
+        <div class="tool">
+            <input type="text" placeholder="size" class="size">
+            <input type="color" class="penColor">
+            <input type="color" class="Bgc">
+            <button>清空</button>
+            <button>撤回</button>
+        </div>
+        <div class="draw"></div>
+    </div>
+
+
+    <script>
+        (function(){
+            let oWrap = document.getElementById("wrap"),
+                oSize = oWrap.getElementsByClassName("size")[0],
+                oPenColor = oWrap.getElementsByClassName("penColor")[0],
+                oBgc = oWrap.getElementsByClassName("Bgc")[0],
+                oDet = oWrap.getElementsByTagName("button")[0],
+                oBack = oWrap.getElementsByTagName("button")[1],
+                oDraw = oWrap.getElementsByClassName("draw")[0],
+                size = 12,
+                Color = "#000000",
+                arrBack = [],
+                oDrawTop = oDraw.offsetTop,
+                oDrawLeft = oDraw.offsetLeft;
+                oSize.onchange = function(){
+                    size = this.value;
+                };
+                oPenColor.onchange = function(){
+                    Color = this.value;
+                };
+                oBgc.onchange = function(){
+                    oDraw.style.backgroundColor = this.value;
+                };
+                oDraw.onmousedown = function(e){
+                    e = e || window.event;
+                    if( e.which !== 1 )return;
+                    arrBack.push([]);
+                    document.onmousemove = function(e){
+                        e = e || window.event;
+                        e.preventDefault();
+                        let div = document.createElement("div");
+                            div.style.width = size + "px";
+                            div.style.height = size + "px";
+                            div.style.backgroundColor = Color;
+                            div.style.top = e.clientY - oDrawTop + "px";
+                            div.style.left = e.clientX - oDrawLeft + "px";
+                            oDraw.appendChild(div);
+                            arrBack[arrBack.length-1]["push"](div);
+                    };
+                };
+                document.onmouseup = function () {
+                    this.onmousemove = null;
+                };
+                oDet.onclick = function () {
+                    oDraw.innerHTML = "";
+                };
+                oBack.onclick = function(){
+                    if( !arrBack.length ) return;
+                    let lastItme = arrBack.pop();
+                    for(let i = 0; i < lastItme.length; i++){
+                        oDraw.removeChild(lastItme[i]);
+                    };
+                };
+        })();
+    </script>
+</body>
+</html>
